@@ -7,7 +7,6 @@ package lab2p2_ramonnolasco;
 import java.util.Scanner;
 import java.util.ArrayList;
 
-
 /**
  *
  * @author ramon
@@ -126,6 +125,54 @@ public class Lab2P2_RamonNolasco {
                                         System.out.println("Ingrese opcion valida!: ");
                                         opcionMoE = input.nextInt();
                                     }
+                                    
+                                    if (opcionMoE == 1) {
+                                        for (int i = 0; i < mapas.size(); i++) {
+                                            System.out.println(i + ". " + mapas.get(i));
+                                        }
+                                        System.out.print("Indice del mapa a modificar: ");
+                                        int idx = input.nextInt();
+                                        input.nextLine();
+
+                                        if (idx >= 0 && idx < mapas.size()) {
+                                            System.out.print("Nuevo nombre de la zona: ");
+                                            String nombre = input.nextLine();
+                                            System.out.print("Nuevo clima: ");
+                                            String clima = input.nextLine();
+                                            System.out.print("Nuevo efecto en héroe: ");
+                                            int eHeroe = input.nextInt();
+                                            System.out.print("Nuevo efecto en enemigos: ");
+                                            int eEnemigos = input.nextInt();
+                                            input.nextLine();
+
+                                            mapas.set(idx, new Mapa(nombre, clima, eHeroe, eEnemigos));
+                                            System.out.println("Mapa modificado exitosamente.");
+                                        } else {
+                                            System.out.println("Indice invalido.");
+                                        }
+                                    } else if (opcionMoE == 2) {
+                                        for (int i = 0; i < enemigos.size(); i++) {
+                                            System.out.println(i + ". " + enemigos.get(i));
+                                        }
+                                        System.out.print("Indice del enemigo a modificar: ");
+                                        int idx = input.nextInt();
+                                        input.nextLine();
+
+                                        if (idx >= 0 && idx < enemigos.size()) {
+                                            System.out.print("Nuevo tipo de enemigo: ");
+                                            String tipo = input.nextLine();
+                                            System.out.print("Nueva vida: ");
+                                            int vida = input.nextInt();
+                                            System.out.print("Nuevo ataque: ");
+                                            int ataque = input.nextInt();
+                                            input.nextLine();
+
+                                            enemigos.set(idx, new Enemigo(tipo, vida, ataque));
+                                            System.out.println("Enemigo modificado exitosamente.");
+                                        } else {
+                                            System.out.println("Indice invalido.");
+                                        }
+                                    }
 
                                     break;
 
@@ -198,6 +245,70 @@ public class Lab2P2_RamonNolasco {
                             break;
 
                         case 2:
+                    
+                            if ( mapas.isEmpty() || enemigos.isEmpty()){
+                                System.out.println("Debe haber al menos un mapa y un enemigo creados por el admin para jugar.");
+                                break;
+                            }
+
+                            System.out.print("Ingrese nombre del heroe: ");
+                            input.nextLine(); 
+                            String nombreHeroe = input.nextLine();
+                            input.nextLine();
+
+                            Heroe heroe = new Heroe(nombreHeroe);
+
+                            System.out.println("Mapas disponibles: ");
+                            
+                            for (int i = 0; i < mapas.size(); i++){
+                                System.out.println(i + ". " + mapas.get(i));
+                            }
+                            System.out.print("Seleccione un mapa: ");
+                            int idxMapa = input.nextInt();
+                            input.nextLine();
+                            if (idxMapa < 0 || idxMapa >= mapas.size()) {
+                                System.out.println("Indice invalido.");
+                                break;
+                            }
+                            Mapa mapaSeleccionado = mapas.get(idxMapa);
+
+                            System.out.println("Enemigos disponibles: ");
+                            for (int i = 0; i < enemigos.size(); i++) {
+                                System.out.println(i + ". " + enemigos.get(i));
+                            }
+                            
+                            System.out.print("Seleccione un enemigo: ");
+                            int idxEnemigo = input.nextInt();
+                            input.nextLine();
+                            if (idxEnemigo < 0 || idxEnemigo >= enemigos.size()) {
+                                System.out.println("Indice invalido.");
+                                break;
+                            }
+                            Enemigo enemigoSeleccionado = enemigos.get(idxEnemigo);
+
+                            heroe.vidaHeroe += mapaSeleccionado.efectoHeroe;
+                            enemigoSeleccionado.vida += mapaSeleccionado.efectoEnemigos;
+
+                            System.out.println("Combate en: " + mapaSeleccionado.nombreZona + " ( Clima: " + mapaSeleccionado.clima + " )");
+                            System.out.println("Iniciando Batalla");
+
+                            while (heroe.vidaHeroe > 0 && enemigoSeleccionado.vida > 0) {
+                                enemigoSeleccionado.vida -= heroe.ataqueHeroe;
+                                if (enemigoSeleccionado.vida <= 0) {
+                                    System.out.println("¡Has derrotado al enemigo!");
+                                    break;
+                                }
+
+                                heroe.vidaHeroe -= enemigoSeleccionado.ataque;
+                                if (heroe.vidaHeroe <= 0){
+                                    System.out.println("Has sido derrotado...");
+                                    break;
+                                }
+
+                                System.out.println("Heroe vida: " + heroe.vidaHeroe + " | Enemigo vida: " + enemigoSeleccionado.vida);
+                                System.out.println("Presione ENTER para siguiente turno...");
+                                input.nextLine();
+                            }
 
                             break;
 
